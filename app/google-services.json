@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1030078810363",
+    "project_id": "campus-grub-official",
+    "storage_bucket": "campus-grub-official.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030078810363:android:89755c6ab393407073c85e",
+        "android_client_info": {
+          "package_name": "com.example.campus_grub_official"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1030078810363-nrkr32g116t4tmcv5cr0s7k2qu23hif3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.campus_grub_official",
+            "certificate_hash": "317bfdcd2944a4fca4ba7f08c42085afe2a951b5"
+          }
+        },
+        {
+          "client_id": "1030078810363-krnvcj0crpmmdkmu1q77434g8qoa5qf1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_w3xoTktLuwlvir-nEZhuQKG_p9tr7z8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1030078810363-krnvcj0crpmmdkmu1q77434g8qoa5qf1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1030078810363-p400bh5a29o4uojiu7rft6vagflr24hc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.campusGrubOfficial"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
