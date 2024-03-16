@@ -1,4 +1,5 @@
 import 'package:campus_grub_official/auth/firebase_options.dart';
+import 'package:campus_grub_official/utils/canteens.dart';
 import 'package:campus_grub_official/screen/home_screen.dart';
 import 'package:campus_grub_official/screen/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: const LoginScreen(),
+      home: const HomeScreen(),
     );
   }
 }
