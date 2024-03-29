@@ -45,7 +45,7 @@ class Canteens extends StatelessWidget {
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
                     ), // Adjust the value to change the radius
-                    child: Image.asset(
+                    child: Image.network(
                       imagePath,
                       fit: BoxFit.cover,
                     ),

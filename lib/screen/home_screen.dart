@@ -1,15 +1,31 @@
 import 'dart:ui';
-import 'package:campus_grub_official/utils/canteens.dart';
+import 'package:campus_grub_official/provider/home_screen_provider.dart';
+import 'package:campus_grub_official/utils/home_screen_canteens.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late HomeScreenProvider homeScreenProvider;
+  @override
+  void initState() {
+    HomeScreenProvider homeScreenProvider = Provider.of(context, listen: false);
+    homeScreenProvider.fecthHomeScreenData();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    homeScreenProvider = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -62,7 +78,8 @@ class HomeScreen extends StatelessWidget {
               width: 350,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/banner.png'),
+                  image: NetworkImage(
+                      'https://firebasestorage.googleapis.com/v0/b/campus-grub-official.appspot.com/o/banner.png?alt=media&token=578e4358-b637-4f2c-a042-0edd594a28ed'),
                 ),
               ),
             ),
@@ -75,17 +92,21 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.normal),
             ),
             Expanded(
-              child: GridView.builder(
-                itemCount: 4,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Two items per row
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return Canteens(
-                    imagePath: 'assets/canteen.png', // Example image path
-                    canteenName: 'Savio Canteen', // Example canteen name
-                    canteenDescription:
-                        'Burger,Wai Wai,Maggi + 7 other items', // Example description
+              child: Consumer<HomeScreenProvider>(
+                builder: (context, provider, _) {
+                  return GridView.builder(
+                    itemCount: provider.getHomeScreenDataList.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Two items per row
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      final canteen = provider.getHomeScreenDataList[index];
+                      return Canteens(
+                        imagePath: canteen.canteenImage ?? '',
+                        canteenName: canteen.canteenName ?? '',
+                        canteenDescription: canteen.canteenDescription ?? '',
+                      );
+                    },
                   );
                 },
               ),
