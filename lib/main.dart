@@ -1,3 +1,4 @@
+import 'package:campus_grub_official/provider/canteen_menu_provider.dart';
 import 'package:campus_grub_official/screen/canteen_menu.dart';
 import 'package:campus_grub_official/screen/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -21,17 +22,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => HomeScreenProvider()),
+        ChangeNotifierProvider(create: (_) => CanteenMenuProvider()),
         // Add more providers if needed
       ],
       child: MaterialApp(
-        title: 'Your App Title',
+        debugShowCheckedModeBanner: false,
         home: LoginScreen(),
-        // Define your routes here if needed
-        // routes: {
-        //   '/home': (context) => HomeScreen(),
-        //   '/login': (context) => LoginScreen(),
-        //   '/canteen_menu': (context) => CanteenMenuScreen(),
-        // },
       ),
     );
   }

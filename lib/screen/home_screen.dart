@@ -1,14 +1,12 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:campus_grub_official/provider/home_screen_provider.dart';
 import 'package:campus_grub_official/utils/home_screen_canteens.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:campus_grub_official/screen/canteen_menu.dart'; // Import the CanteenMenu screen
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -16,16 +14,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late HomeScreenProvider homeScreenProvider;
+
   @override
   void initState() {
-    HomeScreenProvider homeScreenProvider = Provider.of(context, listen: false);
-    homeScreenProvider.fecthHomeScreenData();
+    homeScreenProvider =
+        Provider.of<HomeScreenProvider>(context, listen: false);
+    homeScreenProvider.fetchHomeScreenData(); // Corrected method name
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    homeScreenProvider = Provider.of(context);
+    homeScreenProvider = Provider.of<HomeScreenProvider>(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -101,10 +101,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     itemBuilder: (BuildContext context, int index) {
                       final canteen = provider.getHomeScreenDataList[index];
-                      return Canteens(
-                        imagePath: canteen.canteenImage ?? '',
-                        canteenName: canteen.canteenName ?? '',
-                        canteenDescription: canteen.canteenDescription ?? '',
+                      return GestureDetector(
+                        onTap: () {
+                          // Navigate to the CanteenMenu screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CanteenMenu(), // Pass CanteenMenu screen
+                            ),
+                          );
+                        },
+                        child: Canteens(
+                          imagePath: canteen.canteenImage ?? '',
+                          canteenName: canteen.canteenName ?? '',
+                          canteenDescription: canteen.canteenDescription ?? '',
+                        ),
                       );
                     },
                   );

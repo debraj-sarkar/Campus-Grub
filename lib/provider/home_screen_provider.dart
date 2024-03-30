@@ -1,4 +1,4 @@
-import 'package:campus_grub_official/models/home_screen_model.dart';
+import 'package:campus_grub_official/models/home_screen_canteens_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +6,7 @@ class HomeScreenProvider with ChangeNotifier {
   List<HomeScreenModel> HomeScreenDataList = [];
   late HomeScreenModel homeScreenModel;
 
-  fecthHomeScreenData() async {
+  fetchHomeScreenData() async {
     List<HomeScreenModel> newList = [];
     QuerySnapshot value =
         await FirebaseFirestore.instance.collection('canteens').get();
