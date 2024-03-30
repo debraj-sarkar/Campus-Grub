@@ -25,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    homeScreenProvider = Provider.of<HomeScreenProvider>(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -95,20 +94,21 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Consumer<HomeScreenProvider>(
                 builder: (context, provider, _) {
                   return GridView.builder(
-                    itemCount: provider.getHomeScreenDataList.length,
+                    itemCount: provider.homeScreenDataList.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // Two items per row
                     ),
                     itemBuilder: (BuildContext context, int index) {
-                      final canteen = provider.getHomeScreenDataList[index];
+                      final canteen = provider.homeScreenDataList[index];
                       return GestureDetector(
                         onTap: () {
-                          // Navigate to the CanteenMenu screen
+                          // Navigate to the CanteenMenu screen and pass the canteen ID
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  CanteenMenu(), // Pass CanteenMenu screen
+                              builder: (context) => CanteenMenu(
+                                  canteenId:
+                                      canteen.canteenNo), // Pass canteenId
                             ),
                           );
                         },

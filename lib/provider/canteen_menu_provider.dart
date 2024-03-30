@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+/*import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_grub_official/models/canteen_menu_model.dart';
 
@@ -39,3 +39,4 @@ class CanteenMenuProvider with ChangeNotifier {
     }
   }
 }
+*/
