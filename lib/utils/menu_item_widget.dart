@@ -1,3 +1,4 @@
+import 'package:campus_grub_official/utils/add_item_button.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
 import 'package:flutter/material.dart';
 
@@ -58,28 +59,7 @@ class MenuItemWidget extends StatelessWidget {
             ),
           ),
           //Add Button
-          Container(
-            margin: const EdgeInsets.only(left: 8),
-            child: ElevatedButton(
-              onPressed: onPressed,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                minimumSize: const Size(90, 35),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  side: const BorderSide(
-                    color: Color.fromRGBO(227, 5, 72, 1),
-                  ),
-                ),
-              ),
-              child: const CustomText(
-                text: 'Add',
-                fontSize: 14,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          AddItemButton()
         ],
       ),
     );
