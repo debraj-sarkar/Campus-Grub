@@ -1,5 +1,6 @@
 import 'package:campus_grub_official/utils/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AddItemButton extends StatefulWidget {
   const AddItemButton({super.key});
@@ -19,7 +20,7 @@ class _AddItemButtonState extends State<AddItemButton> {
         onPressed: () {},
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          minimumSize: const Size(80, 35),
+          minimumSize: const Size(85, 35),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
             side: const BorderSide(

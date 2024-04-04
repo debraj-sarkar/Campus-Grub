@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Canteens extends StatelessWidget {
   final String imagePath;
@@ -44,7 +45,7 @@ class Canteens extends StatelessWidget {
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
-                    ), // Adjust the value to change the radius
+                    ),
                     child: Image.network(
                       imagePath,
                       fit: BoxFit.cover,

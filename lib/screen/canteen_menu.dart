@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:campus_grub_official/provider/cateen.dart';
+import 'package:campus_grub_official/provider/canteen.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
 import 'package:campus_grub_official/utils/menu_item_widget.dart';
 
@@ -16,31 +16,21 @@ class CanteenMenu extends StatelessWidget {
         .firstWhere((element) => element.canteenNo == canteenId);
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(227, 5, 72, 1),
+        title: CustomText(
+            text: canteen.canteenName ?? '',
+            fontSize: 20,
+            color: Colors.black,
+            fontWeight: FontWeight.bold),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(15, 40, 15, 0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomText(
-                text: 'Welcome to',
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-              CustomText(
-                text: canteen.canteenName ?? '',
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-              CustomText(
-                text: canteen.canteenDescription ?? '',
-                fontSize: 12,
-                color: Colors.black,
-                fontWeight: FontWeight.normal,
-              ),
-              SizedBox(height: 10),
               Container(
                 height: 200,
                 width: double.infinity,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:campus_grub_official/provider/cateen.dart';
+import 'package:campus_grub_official/provider/canteen.dart';
 import 'package:campus_grub_official/utils/home_screen_canteens.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
 import 'package:provider/provider.dart';
