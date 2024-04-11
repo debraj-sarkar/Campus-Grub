@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(227, 5, 72, 1),
         automaticallyImplyLeading: false,
         title: Row(
           children: <Widget>[
@@ -34,8 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.red,
-                  width: 2.0,
+                  color: Colors.white,
+                  width: 3.0,
                 ),
               ),
               child: CircleAvatar(
@@ -54,13 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 CustomText(
                     text: 'Welcome',
-                    fontSize: 15,
+                    fontSize: 18,
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
                 CustomText(
                     text: 'Debraj',
                     fontSize: 15,
-                    color: Color.fromRGBO(227, 5, 72, 1),
+                    color: Colors.white,
                     fontWeight: FontWeight.bold),
               ],
             ),
@@ -72,13 +73,15 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 150,
-              width: 350,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                      'https://firebasestorage.googleapis.com/v0/b/campus-grub-official.appspot.com/o/banner.png?alt=media&token=578e4358-b637-4f2c-a042-0edd594a28ed'),
+            Center(
+              child: Container(
+                height: 150,
+                width: 350,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        'https://firebasestorage.googleapis.com/v0/b/campus-grub-official.appspot.com/o/banner.png?alt=media&token=578e4358-b637-4f2c-a042-0edd594a28ed'),
+                  ),
                 ),
               ),
             ),

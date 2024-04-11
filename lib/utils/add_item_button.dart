@@ -20,7 +20,7 @@ class _AddItemButtonState extends State<AddItemButton> {
         onPressed: () {},
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          minimumSize: const Size(85, 35),
+          minimumSize: const Size(90, 40),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
             side: const BorderSide(
@@ -32,6 +32,7 @@ class _AddItemButtonState extends State<AddItemButton> {
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // - button
                   InkWell(
                     onTap: () {
                       if (count == 1) {
@@ -46,18 +47,25 @@ class _AddItemButtonState extends State<AddItemButton> {
                         });
                       }
                     },
-                    child: Icon(Icons.remove),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Icon(
+                        Icons.remove,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                    ),
                   ),
                   SizedBox(
-                    width: 10,
+                    width: 15,
                   ),
                   CustomText(
                       text: '$count',
-                      fontSize: 20,
+                      fontSize: 18,
                       color: Colors.black,
                       fontWeight: FontWeight.normal),
                   SizedBox(
-                    width: 10,
+                    width: 15,
                   ),
                   InkWell(
                     onTap: () {
@@ -70,7 +78,14 @@ class _AddItemButtonState extends State<AddItemButton> {
                         }
                       }
                     },
-                    child: Icon(Icons.add),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.black,
+                        size: 25,
+                      ),
+                    ),
                   ),
                 ],
               )
@@ -83,11 +98,14 @@ class _AddItemButtonState extends State<AddItemButton> {
                       },
                     );
                   },
-                  child: CustomText(
-                      text: 'ADD',
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CustomText(
+                        text: 'ADD',
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
       ),
