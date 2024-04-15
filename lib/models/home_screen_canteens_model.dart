@@ -1,4 +1,4 @@
-import 'package:campus_grub_official/models/canteen_menu_model.dart';
+import 'package:campus_grub_official/models/canteen_model.dart';
 
 class HomeScreenModel {
   String? canteenImage;

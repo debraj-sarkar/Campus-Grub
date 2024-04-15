@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => HomeScreenProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        //ChangeNotifierProvider(create: (_) => ReviewCartProvider()),
+        ChangeNotifierProvider(create: (_) => ReviewCartProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

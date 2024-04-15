@@ -1,10 +1,12 @@
+import 'package:campus_grub_official/provider/review_cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({super.key});
+  const CheckoutScreen({Key? key}) : super(key: key);
 
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
@@ -15,17 +17,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<ReviewCartProvider>(context);
+    final cartItems = cartProvider.cartItems;
+    print(cartItems);
+
+    double totalAmount = 0;
+    cartItems.forEach((item) {
+      totalAmount += (item['itemPrice'] * item['quantity']);
+    });
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 240, 245, 1),
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(227, 5, 48, 1),
-        title: CustomText(
-            text: 'Checkout Screen',
-            fontSize: 20,
-            color: Colors.white,
-            fontWeight: FontWeight.bold),
+        title: const CustomText(
+          text: 'Checkout Screen',
+          fontSize: 20,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Stack(
         children: [
@@ -34,40 +45,63 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // menu items and total
                 Container(
-                  height: 260,
                   width: 350,
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 3,
-                        offset:
-                            const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(0, 3),
                       ),
                     ],
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text('data'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: cartItems.map((item) {
+                      return MenuItem(
+                        name: item['itemName'],
+                        price: '\$${item['itemPrice']}',
+                        //quantity: item['quantity'],
+                      );
+                    }).toList(),
+                  ),
                 ),
-
-                SizedBox(
-                  height: 20,
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const CustomText(
+                        text: 'Total to Amount Pay:',
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      CustomText(
+                        text: '\$$totalAmount',
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      )
+                    ],
+                  ),
                 ),
+                const SizedBox(height: 20),
                 // Payment
-                CustomText(
-                    text: 'Online Payment Options',
-                    fontSize: 18,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-
-                SizedBox(
-                  height: 10,
+                const CustomText(
+                  text: 'Online Payment Options',
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
+                const SizedBox(height: 10),
                 Container(
-                  height: 150,
                   width: 350,
                   decoration: BoxDecoration(
                     boxShadow: [
@@ -75,8 +109,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 3,
-                        offset:
-                            const Offset(0, 3), // changes position of shadow
+                        offset: const Offset(0, 3),
                       ),
                     ],
                     color: Colors.white,
@@ -88,7 +121,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: Row(
                           children: [
-                            // Google Pay Image
                             Container(
                               height: 50,
                               width: 50,
@@ -108,15 +140,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              width: 20,
+                            const SizedBox(width: 20),
+                            const CustomText(
+                              text: 'Google Pay',
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
                             ),
-                            CustomText(
-                                text: 'Google Pay',
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                            Spacer(),
+                            const Spacer(),
                             Radio<String>(
                               value: 'Google Pay',
                               groupValue: _selectedPaymentOption,
@@ -125,8 +156,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   _selectedPaymentOption = value;
                                 });
                               },
-                              activeColor:
-                                  Colors.green, // Set active color to green
+                              activeColor: Colors.green,
                             ),
                           ],
                         ),
@@ -154,16 +184,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              width: 20,
+                            const SizedBox(width: 20),
+                            const CustomText(
+                              text: 'Paytm',
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
                             ),
-                            CustomText(
-                                text: 'Paytm',
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                            SizedBox(width: 110),
-                            Spacer(),
+                            const SizedBox(width: 110),
+                            const Spacer(),
                             Radio<String>(
                               value: 'Paytm',
                               groupValue: _selectedPaymentOption,
@@ -173,8 +202,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 });
                               },
                               activeColor: Colors.green,
-                              visualDensity: VisualDensity
-                                  .standard, // Set active color to green
+                              visualDensity: VisualDensity.standard,
                             ),
                           ],
                         ),
@@ -185,14 +213,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ],
             ),
           ),
-
-          // Place Order button
           Positioned(
             left: 20,
             right: 20,
             bottom: 20,
             child: Material(
-              elevation: 4, // Adjust the elevation value as needed
+              elevation: 4,
               borderRadius: BorderRadius.circular(10),
               child: InkWell(
                 onTap: () {
@@ -205,11 +231,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black
-                            .withOpacity(0.2), // Adjust opacity as needed
+                        color: Colors.black.withOpacity(0.2),
                         spreadRadius: 2,
                         blurRadius: 6,
-                        offset: Offset(0, 3), // changes position of shadow
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
@@ -217,7 +242,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     child: Text(
                       'Place Order',
                       style: GoogleFonts.lato(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           color: Colors.white,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -228,6 +253,41 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MenuItem extends StatelessWidget {
+  final String name;
+  final String price;
+
+  const MenuItem({
+    Key? key,
+    required this.name,
+    required this.price,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CustomText(
+            text: name,
+            fontSize: 18,
+            color: Colors.black,
+            fontWeight: FontWeight.normal,
+          ),
+          CustomText(
+            text: price,
+            fontSize: 18,
+            color: Colors.black,
+            fontWeight: FontWeight.normal,
           ),
         ],
       ),

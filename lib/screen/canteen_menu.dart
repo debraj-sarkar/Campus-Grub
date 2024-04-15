@@ -1,14 +1,18 @@
+import 'package:campus_grub_official/provider/review_cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:campus_grub_official/provider/canteen.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
 import 'package:campus_grub_official/utils/menu_item_widget.dart';
-import 'package:campus_grub_official/utils/proceed_to_checkout_btn.dart'; // Import TotalButton widget
+import 'package:campus_grub_official/utils/proceed_to_checkout_btn.dart';
+import 'package:campus_grub_official/utils/add_item_button.dart';
 
 class CanteenMenu extends StatelessWidget {
   final String? canteenId;
+  final Map<String, dynamic>? orderItem;
 
-  const CanteenMenu({Key? key, this.canteenId}) : super(key: key);
+  const CanteenMenu({Key? key, this.canteenId, this.orderItem})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +74,7 @@ class CanteenMenu extends StatelessWidget {
                           final menuItem = canteen.menuItems![index];
                           return MenuItemWidget(
                             itemName: menuItem.itemName ?? '',
-                            itemPrice: double.parse(menuItem.itemPrice ?? '0'),
+                            itemPrice: int.parse(menuItem.itemPrice ?? '0'),
                             onPressed: () {
                               // Add functionality for the add button here
                             },
@@ -82,9 +86,19 @@ class CanteenMenu extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20), // Adjust bottom padding
-            child: ProceedToCheckoutBtn(), // Position TotalButton at the bottom
+          // Use Consumer to conditionally display ProceedToCheckoutBtn()
+          Consumer<ReviewCartProvider>(
+            builder: (context, cartProvider, child) {
+              if (cartProvider.cartItems.isNotEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: ProceedToCheckoutBtn(),
+                );
+              } else {
+                return SizedBox
+                    .shrink(); // Return empty SizedBox if cart is empty
+              }
+            },
           ),
         ],
       ),

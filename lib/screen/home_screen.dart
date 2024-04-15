@@ -1,3 +1,4 @@
+import 'package:campus_grub_official/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_grub_official/provider/canteen.dart';
 import 'package:campus_grub_official/utils/home_screen_canteens.dart';
@@ -19,12 +20,24 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     homeScreenProvider =
         Provider.of<HomeScreenProvider>(context, listen: false);
-    homeScreenProvider.fetchHomeScreenData(); // Corrected method name
+    homeScreenProvider.fetchHomeScreenData();
+    _getUserData(); // Call _getUserData in initState
     super.initState();
+  }
+
+  // Define a method to get user data
+  void _getUserData() async {
+    UserProvider userProvider = Provider.of(context, listen: false);
+    await userProvider.getUserData(); // Await for getUserData
+    setState(() {}); // Trigger a rebuild after getting user data
   }
 
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<UserProvider>(
+        context); // Access UserProvider using Provider.of
+    var userData = userProvider.currentUserData;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(227, 5, 72, 1),
@@ -59,7 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
                 CustomText(
-                    text: 'Debraj',
+                    text: userData?.userName ??
+                        '', // Use null-aware operator and provide default value
                     fontSize: 15,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),

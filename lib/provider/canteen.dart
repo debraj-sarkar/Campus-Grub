@@ -1,4 +1,4 @@
-import 'package:campus_grub_official/models/canteen_menu_model.dart';
+import 'package:campus_grub_official/models/canteen_model.dart';
 import 'package:campus_grub_official/models/home_screen_canteens_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
