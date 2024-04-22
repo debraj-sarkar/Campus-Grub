@@ -12,12 +12,14 @@ import 'package:provider/provider.dart';
 class MenuItemWidget extends StatelessWidget {
   final String itemName;
   final int itemPrice;
+  final String canteenNo;
   final VoidCallback onPressed;
 
   const MenuItemWidget({
     required this.itemName,
     required this.itemPrice,
     required this.onPressed,
+    required this.canteenNo,
   });
 
   @override
@@ -69,6 +71,7 @@ class MenuItemWidget extends StatelessWidget {
           AddItemButton(
             itemName: itemName,
             itemPrice: itemPrice,
+            canteenNo: canteenNo,
           )
         ],
       ),

@@ -56,7 +56,7 @@ class LoginScreen extends StatelessWidget {
             ),
             SignInButton(
               Buttons.apple,
-              text: "Sign up with Google",
+              text: "Sign up with Apple",
               onPressed: () {},
             )
           ],

@@ -1,9 +1,9 @@
-class CanteenMenuItem {
+class CanteenMenuItemModel {
   String? itemName;
   String? itemPrice;
   String? itemType;
   String? canteenNo;
 
-  CanteenMenuItem(
+  CanteenMenuItemModel(
       {this.itemName, this.itemPrice, this.itemType, this.canteenNo});
 }

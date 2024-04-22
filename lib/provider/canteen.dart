@@ -15,6 +15,8 @@ class HomeScreenProvider with ChangeNotifier {
 
       List<HomeScreenModel> newList = [];
       for (QueryDocumentSnapshot document in homeScreenDataSnapshot.docs) {
+        String canteenId = document.id; // Get canteen ID
+        String canteenNo = document.get('canteenNo');
         HomeScreenModel homeScreenModel = HomeScreenModel(
           canteenImage: document.get('canteenImage'),
           canteenName: document.get('canteenName'),
@@ -23,8 +25,8 @@ class HomeScreenProvider with ChangeNotifier {
         );
 
         // Fetch menu items for this canteen
-        List<CanteenMenuItem> menuItems =
-            await _fetchCanteenMenuData(document.id);
+        List<CanteenMenuItemModel> menuItems =
+            await _fetchCanteenMenuData(document.id, canteenNo);
 
         homeScreenModel.menuItems = menuItems;
         // Print menu items for debugging
@@ -32,7 +34,8 @@ class HomeScreenProvider with ChangeNotifier {
         for (var menuItem in menuItems) {
           print('Item Name: ${menuItem.itemName}, '
               'Price: ${menuItem.itemPrice}, '
-              'Type: ${menuItem.itemType}');
+              'Type: ${menuItem.itemType}, '
+              'canteenNo: ${menuItem.canteenNo}, ');
         }
 
         newList.add(homeScreenModel);
@@ -45,8 +48,9 @@ class HomeScreenProvider with ChangeNotifier {
     }
   }
 
-  Future<List<CanteenMenuItem>> _fetchCanteenMenuData(String canteenId) async {
-    List<CanteenMenuItem> menuItems = [];
+  Future<List<CanteenMenuItemModel>> _fetchCanteenMenuData(
+      String canteenId, String canteenNo) async {
+    List<CanteenMenuItemModel> menuItems = [];
     try {
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
           await FirebaseFirestore.instance
@@ -63,10 +67,12 @@ class HomeScreenProvider with ChangeNotifier {
         String itemName = itemData['itemName'];
         String itemPrice = itemData['itemPrice'];
         String itemType = itemData['itemType'];
-        menuItems.add(CanteenMenuItem(
+        //String? canteenNo = itemData['canteenNo'];
+        menuItems.add(CanteenMenuItemModel(
           itemName: itemName,
           itemPrice: itemPrice,
           itemType: itemType,
+          canteenNo: canteenNo,
         ));
       });
 

@@ -3,15 +3,16 @@ import 'package:provider/provider.dart';
 import 'package:campus_grub_official/provider/review_cart_provider.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
 
-// Import necessary packages
-
 class AddItemButton extends StatefulWidget {
   final String? itemName;
   final int? itemPrice;
+  String? canteenNo;
 
   AddItemButton({
+    super.key,
     this.itemName,
     this.itemPrice,
+    this.canteenNo,
   });
 
   @override
@@ -22,11 +23,20 @@ class _AddItemButtonState extends State<AddItemButton> {
   int count = 0;
   bool isTrue = false;
 
+  @override
+  void initState() {
+    super.initState();
+    count = Provider.of<ReviewCartProvider>(context, listen: false)
+        .getQuantityForItem(
+            widget.itemName as String, widget.canteenNo as String);
+  }
+
   void _addItems() {
     Map<String, dynamic> orderItem = {
       'itemName': widget.itemName,
       'itemPrice': widget.itemPrice,
       'quantity': count,
+      'canteenNo': widget.canteenNo,
     };
 
     // Add the item to the cart

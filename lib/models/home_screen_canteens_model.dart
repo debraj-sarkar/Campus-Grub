@@ -5,7 +5,7 @@ class HomeScreenModel {
   String? canteenName;
   String? canteenDescription;
   String? canteenNo; // Add canteenNo field
-  List<CanteenMenuItem>? menuItems; // Add menuItems field
+  List<CanteenMenuItemModel>? menuItems; // Add menuItems field
 
   HomeScreenModel({
     this.canteenImage,

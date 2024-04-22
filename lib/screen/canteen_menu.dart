@@ -75,6 +75,7 @@ class CanteenMenu extends StatelessWidget {
                           return MenuItemWidget(
                             itemName: menuItem.itemName ?? '',
                             itemPrice: int.parse(menuItem.itemPrice ?? '0'),
+                            canteenNo: menuItem.canteenNo ?? '',
                             onPressed: () {
                               // Add functionality for the add button here
                             },

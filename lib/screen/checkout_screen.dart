@@ -17,8 +17,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cartProvider = Provider.of<ReviewCartProvider>(context);
-    final cartItems = cartProvider.cartItems;
+    final reviewcartProvider = Provider.of<ReviewCartProvider>(context);
+    final cartItems = reviewcartProvider.cartItems;
     print(cartItems);
 
     double totalAmount = 0;
@@ -65,8 +65,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     children: cartItems.map((item) {
                       return MenuItem(
                         name: item['itemName'],
-                        price: '\$${item['itemPrice']}',
-                        //quantity: item['quantity'],
+                        price: '\₹ ${item['itemPrice']}',
+                        quantity: item['quantity'],
                       );
                     }).toList(),
                   ),
@@ -81,13 +81,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         text: 'Total to Amount Pay:',
                         fontSize: 15,
                         color: Colors.black,
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.bold,
                       ),
                       CustomText(
-                        text: '\$$totalAmount',
+                        text: '\₹$totalAmount',
                         fontSize: 15,
                         color: Colors.black,
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.bold,
                       )
                     ],
                   ),
@@ -263,11 +263,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 class MenuItem extends StatelessWidget {
   final String name;
   final String price;
+  final int quantity;
 
   const MenuItem({
     Key? key,
     required this.name,
     required this.price,
+    required this.quantity,
   }) : super(key: key);
 
   @override
@@ -276,12 +278,21 @@ class MenuItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomText(
-            text: name,
-            fontSize: 18,
-            color: Colors.black,
-            fontWeight: FontWeight.normal,
+          Container(
+            width: 150,
+            decoration: BoxDecoration(
+                border: Border.all(
+              color: Colors.transparent,
+              width: 1,
+            )),
+            child: CustomText(
+              text: name,
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+            ),
           ),
           CustomText(
             text: price,
@@ -289,6 +300,16 @@ class MenuItem extends StatelessWidget {
             color: Colors.black,
             fontWeight: FontWeight.normal,
           ),
+          const CustomText(
+              text: 'X',
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.normal),
+          CustomText(
+              text: quantity.toString(),
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.normal),
         ],
       ),
     );

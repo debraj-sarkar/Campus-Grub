@@ -9,8 +9,9 @@ class ReviewCartProvider extends ChangeNotifier {
 
   void addToCart(Map<String, dynamic> item) {
     // Check if the item already exists in the cart
-    int existingItemIndex = _cartItems
-        .indexWhere((cartItem) => cartItem['itemName'] == item['itemName']);
+    int existingItemIndex = _cartItems.indexWhere((cartItem) =>
+        cartItem['itemName'] == item['itemName'] &&
+        cartItem['canteenNo'] == item['canteenNo']);
     if (existingItemIndex != -1) {
       // Update the quantity of the existing item
       _cartItems[existingItemIndex]['quantity'] =
@@ -25,17 +26,35 @@ class ReviewCartProvider extends ChangeNotifier {
     notifyListeners(); // Notify listeners about the change in cart items and total price
   }
 
+  int getQuantityForItem(String itemName, String canteenNo) {
+    // Find the item in the cart based on its name and canteenNo
+    var item = _cartItems.firstWhere(
+      (cartItem) =>
+          cartItem['itemName'] == itemName &&
+          cartItem['canteenNo'] == canteenNo,
+      orElse: () =>
+          {'quantity': 0}, // Provide a default value if item is not found
+    );
+
+    // Return the quantity of the item
+    return item['quantity'];
+  }
+
   void removeLastItem() {
     if (_cartItems.isNotEmpty) {
-      // Get the price and quantity of the last item
-      int lastItemPrice = _cartItems.last['itemPrice'] as int;
-      int lastItemQuantity = _cartItems.last['quantity'] as int;
+      // Get the last item in the cart
+      Map<String, dynamic> lastItem = _cartItems.last;
 
-      // Subtract the total price of the last item from the total price
-      _totalPrice -= (lastItemPrice * lastItemQuantity);
+      // Decrement the quantity of the last item
+      lastItem['quantity']--;
 
-      // Remove the last item from the cart
-      _cartItems.removeLast();
+      // Update the total price
+      _totalPrice -= lastItem['itemPrice'] as int;
+
+      // If the quantity of the last item is now 0, remove it from the cart
+      if (lastItem['quantity'] == 0) {
+        _cartItems.removeLast();
+      }
 
       notifyListeners(); // Notify listeners about the change in cart items and total price
     }
