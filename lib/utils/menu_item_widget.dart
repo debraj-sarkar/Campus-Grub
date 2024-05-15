@@ -1,13 +1,6 @@
-import 'package:campus_grub_official/models/home_screen_canteens_model.dart';
-import 'package:campus_grub_official/provider/canteen.dart';
-import 'package:campus_grub_official/screen/canteen_menu.dart';
-import 'package:campus_grub_official/screen/home_screen.dart';
 import 'package:campus_grub_official/utils/add_item_button.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
-import 'package:campus_grub_official/utils/home_screen_canteens.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class MenuItemWidget extends StatelessWidget {
   final String itemName;

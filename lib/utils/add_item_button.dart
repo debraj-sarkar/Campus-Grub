@@ -23,12 +23,19 @@ class _AddItemButtonState extends State<AddItemButton> {
   int count = 0;
   bool isTrue = false;
 
-  @override
+  /* @override
   void initState() {
     super.initState();
     count = Provider.of<ReviewCartProvider>(context, listen: false)
         .getQuantityForItem(
-            widget.itemName as String, widget.canteenNo as String);
+            widget.itemName!, widget.canteenNo!);
+  }
+*/
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    count = Provider.of<ReviewCartProvider>(context, listen: false)
+        .getQuantityForItem(widget.itemName!, widget.canteenNo!);
   }
 
   void _addItems() {
@@ -41,7 +48,7 @@ class _AddItemButtonState extends State<AddItemButton> {
 
     // Add the item to the cart
     Provider.of<ReviewCartProvider>(context, listen: false)
-        .addToCart(orderItem);
+        .addToCart(orderItem, context);
 
     // Update the isTrue state
     setState(() {

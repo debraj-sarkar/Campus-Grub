@@ -1,9 +1,13 @@
+import 'package:campus_grub_official/payment_summery/payment.dart';
 import 'package:campus_grub_official/provider/review_cart_provider.dart';
+import 'package:campus_grub_official/utils/order_confirmation.dart';
+import 'package:campus_grub_official/utils/upi_payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:upi_india/upi_india.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({Key? key}) : super(key: key);
@@ -13,18 +17,184 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  Future<UpiResponse>? _transaction;
+  UpiApp? _selectedUpiApp;
+  UpiIndia _upiIndia = UpiIndia();
+  List<UpiApp>? apps;
+
+  TextStyle header = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
+
+  TextStyle value = TextStyle(
+    fontWeight: FontWeight.w400,
+    fontSize: 14,
+  );
+
+  @override
+  void initState() {
+    _upiIndia.getAllUpiApps(mandatoryTransactionId: false).then((value) {
+      setState(() {
+        apps = value;
+      });
+    }).catchError((e) {
+      apps = [];
+    });
+    super.initState();
+  }
+
   String? _selectedPaymentOption;
+
+  // Define confirmOrder function outside the build method
+  void confirmOrder(List<Map<String, dynamic>> cartItems) {
+    final reviewcartProvider =
+        Provider.of<ReviewCartProvider>(context, listen: false);
+    reviewcartProvider.uploadOrderToFirebase(cartItems);
+
+    // Clear the cart items
+    reviewcartProvider.clearCart();
+
+    // Notify all listeners about the change in cart items
+    reviewcartProvider.notifyListeners();
+
+    // Other logic related to confirming the order...
+  }
 
   @override
   Widget build(BuildContext context) {
     final reviewcartProvider = Provider.of<ReviewCartProvider>(context);
     final cartItems = reviewcartProvider.cartItems;
+    final reviewCartProvider =
+        Provider.of<ReviewCartProvider>(context, listen: false);
     print(cartItems);
 
     double totalAmount = 0;
     cartItems.forEach((item) {
       totalAmount += (item['itemPrice'] * item['quantity']);
     });
+
+    Future<UpiResponse> initiateTransaction(UpiApp app) async {
+      return _upiIndia.startTransaction(
+        app: app,
+        receiverUpiId: "debrajsarkarsiliguri123@okicici",
+        receiverName: 'Debraj Sarkar',
+        transactionRefId: 'TestingUpiIndiaPlugin',
+        //transactionNote: 'Not actual. Just an example.',
+        amount: totalAmount,
+      );
+    }
+
+    bool isFirstAppSelected = false;
+
+    Widget displayUpiApps() {
+      if (apps == null) {
+        return Center(child: CircularProgressIndicator());
+      } else if (apps!.isEmpty) {
+        return Center(
+          child: Text(
+            "No apps found to handle transaction.",
+            style: header,
+          ),
+        );
+      } else {
+        return Container(
+          width: 350,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                child: Expanded(
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      children: apps!.map<Widget>((UpiApp app) {
+                        if (!isFirstAppSelected && _selectedUpiApp == null) {
+                          _selectedUpiApp = app;
+                          isFirstAppSelected = true;
+                        }
+                        return ListTile(
+                          leading: Image.memory(
+                            app.icon,
+                            height: 60,
+                            width: 60,
+                          ),
+                          title: CustomText(
+                            text: app.name,
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          trailing: Radio<UpiApp>(
+                            value: app,
+                            groupValue: _selectedUpiApp,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedUpiApp = value;
+                              });
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+
+    String _upiErrorHandler(error) {
+      switch (error) {
+        case UpiIndiaAppNotInstalledException:
+          return 'Requested app not installed on device';
+        case UpiIndiaUserCancelledException:
+          return 'You cancelled the transaction';
+        case UpiIndiaNullResponseException:
+          return 'Requested app didn\'t return any response';
+        case UpiIndiaInvalidParametersException:
+          return 'Requested app cannot handle the transaction';
+        default:
+          return 'An Unknown error has occurred';
+      }
+    }
+
+    void _checkTxnStatus(String status) {
+      switch (status) {
+        case UpiPaymentStatus.SUCCESS:
+          print('Transaction Successful');
+          break;
+        case UpiPaymentStatus.SUBMITTED:
+          print('Transaction Submitted');
+          break;
+        case UpiPaymentStatus.FAILURE:
+          print('Transaction Failed');
+          break;
+        default:
+          print('Received an Unknown transaction status');
+      }
+    }
+
+    Widget displayTransactionData(title, body) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("$title: ", style: header),
+            Flexible(
+                child: Text(
+              body,
+              style: value,
+            )),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 240, 245, 1),
       appBar: AppBar(
@@ -101,8 +271,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   fontWeight: FontWeight.bold,
                 ),
                 const SizedBox(height: 10),
+
                 Container(
                   width: 350,
+                  height: 200,
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -116,95 +288,66 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.grey[350]!,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Image.network(
-                                  'https://firebasestorage.googleapis.com/v0/b/campus-grub-official.appspot.com/o/google_pay_icon.png?alt=media&token=f07c7323-cd56-45d1-8d80-8813272e73cf',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            const CustomText(
-                              text: 'Google Pay',
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            const Spacer(),
-                            Radio<String>(
-                              value: 'Google Pay',
-                              groupValue: _selectedPaymentOption,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedPaymentOption = value;
-                                });
-                              },
-                              activeColor: Colors.green,
-                            ),
-                          ],
-                        ),
+                    children: <Widget>[
+                      Expanded(
+                        child: displayUpiApps(),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.grey[350]!,
-                                  width: 1.5,
+                      Expanded(
+                        child: FutureBuilder(
+                          future: _transaction,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<UpiResponse> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              if (snapshot.hasError) {
+                                return Center(
+                                  child: Text(
+                                    _upiErrorHandler(
+                                        snapshot.error.runtimeType),
+                                    style: header,
+                                  ), // Print's text message on screen
+                                );
+                              }
+
+                              // If we have data then definitely we will have UpiResponse.
+                              // It cannot be null
+                              UpiResponse _upiResponse = snapshot.data!;
+
+                              // Data in UpiResponse can be null. Check before printing
+                              String txnId =
+                                  _upiResponse.transactionId ?? 'N/A';
+                              String resCode =
+                                  _upiResponse.responseCode ?? 'N/A';
+                              String txnRef =
+                                  _upiResponse.transactionRefId ?? 'N/A';
+                              String status = _upiResponse.status ?? 'N/A';
+                              String approvalRef =
+                                  _upiResponse.approvalRefNo ?? 'N/A';
+                              _checkTxnStatus(status);
+
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    displayTransactionData(
+                                        'Transaction Id', txnId),
+                                    displayTransactionData(
+                                        'Response Code', resCode),
+                                    displayTransactionData(
+                                        'Reference Id', txnRef),
+                                    displayTransactionData(
+                                        'Status', status.toUpperCase()),
+                                    displayTransactionData(
+                                        'Approval No', approvalRef),
+                                  ],
                                 ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Image.network(
-                                  'https://firebasestorage.googleapis.com/v0/b/campus-grub-official.appspot.com/o/paytm_icon.png?alt=media&token=6f7ffaad-3973-4998-8546-4a262711edf4',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            const CustomText(
-                              text: 'Paytm',
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            const SizedBox(width: 110),
-                            const Spacer(),
-                            Radio<String>(
-                              value: 'Paytm',
-                              groupValue: _selectedPaymentOption,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedPaymentOption = value;
-                                });
-                              },
-                              activeColor: Colors.green,
-                              visualDensity: VisualDensity.standard,
-                            ),
-                          ],
+                              );
+                            } else
+                              return Center(
+                                child: Text(''),
+                              );
+                          },
                         ),
                       )
                     ],
@@ -213,6 +356,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ],
             ),
           ),
+          //Place Order Button
           Positioned(
             left: 20,
             right: 20,
@@ -221,8 +365,71 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               elevation: 4,
               borderRadius: BorderRadius.circular(10),
               child: InkWell(
-                onTap: () {
-                  print('Hello');
+                onTap: () async {
+                  if (_selectedUpiApp != null) {
+                    _transaction = initiateTransaction(_selectedUpiApp!);
+                    setState(() {});
+                  } else {
+                    // Handle case where no app is selected
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Error'),
+                          content: Text('Please select a payment method.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                  UpiResponse? response;
+
+                  try {
+                    if (_transaction != null) {
+                      response = await _transaction!;
+
+                      if (response != null) {
+                        // Handle other transaction statuses if needed
+                        if (response.status == UpiPaymentStatus.FAILURE) {
+                          print('Transaction failed.');
+                        } else {
+                          print('Transaction status unknown.');
+                        }
+                      } else {
+                        // Handle case where response is null (transaction canceled)
+                        print('Transaction canceled.');
+                      }
+                    } else {
+                      // Handle case where transaction is null
+                      print('Transaction is null.');
+                    }
+                  } catch (e) {
+                    // Handle any exceptions that occur during the transaction
+                    print('Error during transaction: $e');
+                  } finally {
+                    // Navigate to OrderConfirmation page regardless of transaction status
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OrderConfirmation(
+                          responseStatus: response?.status ??
+                              '', // Pass status if available
+                        ),
+                      ),
+                    );
+                  }
+                  // Upload order to Firebase
+                  // await reviewCartProvider.uploadOrderToFirebase(cartItems);
+
+                  // // Clear cart items after upload is complete
+                  // reviewCartProvider.clearCart();
                 },
                 child: Container(
                   height: 55,

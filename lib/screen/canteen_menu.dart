@@ -5,7 +5,6 @@ import 'package:campus_grub_official/provider/canteen.dart';
 import 'package:campus_grub_official/utils/custom_text.dart';
 import 'package:campus_grub_official/utils/menu_item_widget.dart';
 import 'package:campus_grub_official/utils/proceed_to_checkout_btn.dart';
-import 'package:campus_grub_official/utils/add_item_button.dart';
 
 class CanteenMenu extends StatelessWidget {
   final String? canteenId;
