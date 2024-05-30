@@ -77,11 +77,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     Future<UpiResponse> initiateTransaction(UpiApp app) async {
       return _upiIndia.startTransaction(
         app: app,
-        receiverUpiId: "debrajsarkarsiliguri123@okicici",
+        receiverUpiId: "arijtroy@okaxis",
         receiverName: 'Debraj Sarkar',
         transactionRefId: 'TestingUpiIndiaPlugin',
         //transactionNote: 'Not actual. Just an example.',
-        amount: totalAmount,
+        amount: 1,
       );
     }
 
