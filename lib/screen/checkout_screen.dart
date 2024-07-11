@@ -366,7 +366,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               borderRadius: BorderRadius.circular(10),
               child: InkWell(
                 onTap: () async {
-                  if (_selectedUpiApp != null) {
+                  /*if (_selectedUpiApp != null) {
                     _transaction = initiateTransaction(_selectedUpiApp!);
                     setState(() {});
                   } else {
@@ -424,12 +424,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                       ),
                     );
-                  }
+                  }*/
                   // Upload order to Firebase
-                  // await reviewCartProvider.uploadOrderToFirebase(cartItems);
+                  await reviewCartProvider.uploadOrderToFirebase(cartItems);
 
                   // // Clear cart items after upload is complete
-                  // reviewCartProvider.clearCart();
+                  reviewCartProvider.clearCart();
                 },
                 child: Container(
                   height: 55,

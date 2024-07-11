@@ -8,17 +8,6 @@ class OrderDetails {
 
   Future<void> uploadOrderDetails(List<Map<String, dynamic>> cartItems) async {
     try {
-      // Get the current date
-      DateTime now = DateTime.now();
-      DateTime date = DateTime(now.year, now.month, now.day);
-
-      // Create a formatted date string (e.g., "2022-05-03")
-      String formattedDate = "${date.year}-${date.month}-${date.day}";
-
-      // Create a new document reference with the formatted date as the ID
-      DocumentReference orderRef =
-          _firestore.collection('orders').doc(formattedDate);
-
       // Get the current timestamp
       Timestamp timestamp = Timestamp.now();
 
@@ -29,8 +18,8 @@ class OrderDetails {
 
       // Check if user data is available
       if (currentUser != null) {
-        // Upload cartItems, user name, email, and timestamp to Firestore
-        await orderRef.collection('orders').add({
+        // Add a new order document with an auto-generated ID
+        await _firestore.collection('orders').add({
           'cartItems': cartItems,
           'userName': currentUser.userName,
           'userEmail': currentUser.userEmail,
